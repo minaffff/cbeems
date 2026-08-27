@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { env } from './config/env'
+import { SocialIcon } from './components/SocialIcon'
 import { copy, type Locale, type MediaReference } from './content'
 import { useLessonData } from './features/lessons/context/LessonDataContext'
 
@@ -131,12 +132,20 @@ export function FooterAndCookies({ locale }: LocaleProps) {
               6th Floor, San Francisco,<br />
               CA 94158
             </address>
-          </div>
-          <div className="footer-socials" aria-label={text.socialLinksLabel}>
-            <a href="https://www.facebook.com/wix" target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
-            <a href="https://www.instagram.com/wix" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
-            <a href="https://x.com/wix" target="_blank" rel="noreferrer" aria-label="X">X</a>
-            <a href="https://www.tiktok.com/@wix" target="_blank" rel="noreferrer" aria-label="TikTok">♪</a>
+            <div className="footer-socials" aria-label={text.socialLinksLabel}>
+              <a href="https://www.facebook.com/wix" target="_blank" rel="noreferrer" aria-label="Facebook">
+                <SocialIcon platform="facebook" />
+              </a>
+              <a href="https://www.instagram.com/wix" target="_blank" rel="noreferrer" aria-label="Instagram">
+                <SocialIcon platform="instagram" />
+              </a>
+              <a href="https://x.com/wix" target="_blank" rel="noreferrer" aria-label="X">
+                <SocialIcon platform="x" />
+              </a>
+              <a href="https://www.tiktok.com/@wix" target="_blank" rel="noreferrer" aria-label="TikTok">
+                <SocialIcon platform="tiktok" />
+              </a>
+            </div>
           </div>
           <div className="footer-links">
             <Link to={routeFor(locale, '/privacy')}>{text.privacyTitle}</Link>

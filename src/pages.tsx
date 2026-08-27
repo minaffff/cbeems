@@ -6,9 +6,10 @@ import { LessonMedia, ResourceGrid } from './features/lessons/components'
 import { useLessonData } from './features/lessons/context/LessonDataContext'
 import { copy, type Locale } from './content'
 import {
-  accessibilityStatement,
-  privacyPolicy,
+  accessibilityStatements,
+  privacyPolicies,
   type PolicyDocument,
+  type PolicyParagraph,
 } from './content/policies'
 
 type LocaleProps = { locale: Locale }
@@ -192,7 +193,7 @@ export function ContactPage({ locale }: LocaleProps) {
 
 export function PrivacyPage({ locale }: LocaleProps) {
   const text = copy[locale]
-  return <PolicyPage locale={locale} title={text.privacyTitle} document={privacyPolicy} />
+  return <PolicyPage locale={locale} title={text.privacyTitle} document={privacyPolicies[locale]} />
 }
 
 export function AccessibilityPage({ locale }: LocaleProps) {
@@ -201,7 +202,7 @@ export function AccessibilityPage({ locale }: LocaleProps) {
     <PolicyPage
       locale={locale}
       title={text.accessibilityTitle}
-      document={accessibilityStatement}
+      document={accessibilityStatements[locale]}
     />
   )
 }
@@ -220,27 +221,55 @@ function PolicyPage({
           <h1>{title}</h1>
         </div>
         <article className="policy-content">
-          {document.introduction.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          {document.notice && (
+            <aside className="policy-notice">
+              {document.notice.map((paragraph, index) => (
+                <p key={index}><PolicyText paragraph={paragraph} /></p>
+              ))}
+            </aside>
+          )}
+          {document.introduction.length > 0 && (
+            <div className="policy-introduction">
+              {document.introduction.map((paragraph, index) => (
+                <p key={index}><PolicyText paragraph={paragraph} /></p>
+              ))}
+            </div>
+          )}
           {document.sections.map((policySection) => (
             <section className="policy-section" key={policySection.heading}>
               <h2>{policySection.heading}</h2>
-              {policySection.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              {policySection.paragraphs?.map((paragraph, index) => (
+                <p key={index}><PolicyText paragraph={paragraph} /></p>
+              ))}
               {policySection.items && (
                 <ul>
-                  {policySection.items.map((item) => <li key={item}>{item}</li>)}
+                  {policySection.items.map((item, index) => (
+                    <li key={index}><PolicyText paragraph={item} /></li>
+                  ))}
                 </ul>
               )}
-              {policySection.links?.map((link) => (
-                <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
-                  {link.label}
-                </a>
-              ))}
             </section>
           ))}
         </article>
       </div>
     </section>
   )
+}
+
+function PolicyText({ paragraph }: { paragraph: PolicyParagraph }) {
+  if (typeof paragraph === 'string') return paragraph
+
+  return paragraph.parts.map((part, index) => {
+    const content = part.emphasis ? <em>{part.text}</em> : part.text
+    if (part.href) {
+      return (
+        <a key={index} href={part.href} target="_blank" rel="noreferrer">
+          {content}
+        </a>
+      )
+    }
+    return <span key={index}>{content}</span>
+  })
 }
 
 export function NotFoundPage({ locale }: LocaleProps) {

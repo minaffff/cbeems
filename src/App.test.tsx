@@ -130,6 +130,9 @@ describe('C-BEEMS', () => {
 
     expect(screen.getByText(/500 Terry Francine Street/)).toBeVisible()
     expect(screen.getByText(/© 2035 by BEEMS/)).toBeVisible()
+    for (const platform of ['Facebook', 'Instagram', 'X', 'TikTok']) {
+      expect(screen.getByRole('link', { name: platform }).querySelector('svg')).toBeInTheDocument()
+    }
     expect(screen.queryByText('Analytics')).not.toBeInTheDocument()
     expect(screen.getByRole('checkbox', { name: 'Essential — always active' })).toBeChecked()
 
@@ -141,15 +144,44 @@ describe('C-BEEMS', () => {
     expect(screen.getByRole('region', { name: 'Your privacy choices' })).toBeVisible()
   })
 
-  it('renders structured privacy and accessibility content', async () => {
+  it('renders the supplied English privacy and accessibility content', async () => {
     const privacy = renderAt('/en/privacy')
-    expect(await screen.findByRole('heading', { name: 'Privacy policy', level: 1 })).toBeVisible()
-    expect(screen.getByRole('heading', { name: 'Privacy policy — the basics', level: 2 })).toBeVisible()
+    expect(await screen.findByRole('heading', { name: 'Privacy Policy', level: 1 })).toBeVisible()
+    expect(screen.getByRole('heading', { name: 'Privacy Policy - the basics', level: 2 })).toBeVisible()
+    expect(screen.getByRole('link', { name: 'Creating a Privacy Policy' })).toHaveAttribute(
+      'href',
+      'https://support.wix.com/en/article/creating-a-privacy-policy',
+    )
     privacy.unmount()
 
     renderAt('/en/accessibility')
-    expect(await screen.findByRole('heading', { name: 'Accessibility statement', level: 1 })).toBeVisible()
+    expect(await screen.findByRole('heading', { name: 'Accessibility Statement', level: 1 })).toBeVisible()
     expect(screen.getByRole('heading', { name: 'What web accessibility is', level: 2 })).toBeVisible()
+    expect(screen.getByText('[enter relevant date].')).toBeVisible()
+    expect(
+      screen.getByRole('link', {
+        name: 'Accessibility: Adding an Accessibility Statement to Your Site',
+      }),
+    ).toHaveAttribute(
+      'href',
+      'https://support.wix.com/en/article/accessibility-adding-an-accessibility-statement-to-your-site',
+    )
+  })
+
+  it('renders complete Hindi policy translations on Hindi routes', async () => {
+    const privacy = renderAt('/hi/privacy')
+    expect(await screen.findByRole('heading', { name: 'गोपनीयता नीति', level: 1 })).toBeVisible()
+    expect(screen.getByRole('heading', { name: 'गोपनीयता नीति - मूल बातें', level: 2 })).toBeVisible()
+    expect(screen.getByRole('link', { name: 'गोपनीयता नीति बनाना' })).toBeVisible()
+    privacy.unmount()
+
+    renderAt('/hi/accessibility')
+    expect(await screen.findByRole('heading', { name: 'सुलभता वक्तव्य', level: 1 })).toBeVisible()
+    expect(screen.getByRole('heading', { name: 'वेब सुलभता क्या है', level: 2 })).toBeVisible()
+    expect(screen.getByText('[संबंधित तारीख दर्ज करें]')).toBeVisible()
+    expect(
+      screen.getByRole('link', { name: 'सुलभता: अपनी साइट पर सुलभता वक्तव्य जोड़ना' }),
+    ).toBeVisible()
   })
 
   it('renders a designed 404 with recovery links', async () => {
