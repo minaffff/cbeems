@@ -40,6 +40,12 @@ const useEmulators = readBoolean(
   import.meta.env.VITE_USE_FIREBASE_EMULATORS,
 )
 
+const firebaseEnabled =
+  readBoolean(
+    'VITE_FIREBASE_ENABLED',
+    import.meta.env.VITE_FIREBASE_ENABLED,
+  ) || useEmulators
+
 if (environment === 'production' && useEmulators) {
   throw new Error('Production must not be configured to use Firebase emulators.')
 }
@@ -52,6 +58,7 @@ export const env = Object.freeze({
     environment,
   },
   firebase: {
+    enabled: firebaseEnabled,
     apiKey: readRemoteValue(
       'VITE_FIREBASE_API_KEY',
       import.meta.env.VITE_FIREBASE_API_KEY,

@@ -64,13 +64,13 @@ const mergeLessons = (
 export function LessonDataProvider({ children }: PropsWithChildren) {
   const [lessons, setLessons] = useState(initialLessons)
   const [status, setStatus] = useState<DataStatus>(
-    env.firebase.useEmulators ? 'loading' : 'static',
+    env.firebase.enabled ? 'loading' : 'static',
   )
   const [remoteLessonCount, setRemoteLessonCount] = useState(0)
   const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
-    if (!env.firebase.useEmulators) return
+    if (!env.firebase.enabled) return
 
     let active = true
 

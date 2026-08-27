@@ -1,9 +1,15 @@
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { DisabledContactForm } from './features/contact/components'
+import { HomeIntroductionVideo } from './features/introduction/components'
 import { LessonMedia, ResourceGrid } from './features/lessons/components'
 import { useLessonData } from './features/lessons/context/LessonDataContext'
 import { copy, type Locale } from './content'
+import {
+  accessibilityStatement,
+  privacyPolicy,
+  type PolicyDocument,
+} from './content/policies'
 
 type LocaleProps = { locale: Locale }
 
@@ -37,42 +43,7 @@ export function HomePage({ locale }: LocaleProps) {
               </Link>
             </div>
           </div>
-          <div className="image-placeholder" role="img" aria-label={text.imageLabel}>
-            <div className="image-placeholder-art" aria-hidden="true">
-              <span className="sun" />
-              <span className="person person-one" />
-              <span className="person person-two" />
-              <span className="ground" />
-            </div>
-            <div>
-              <strong>{text.imageLabel}</strong>
-              <span>{text.imageHelp}</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="trust-strip" aria-label="Prototype highlights">
-        <div className="content-wrap trust-grid">
-          <span><i aria-hidden="true">अ</i>{text.trustLanguage}</span>
-          <span><i aria-hidden="true">08</i>{text.trustLessons}</span>
-          <span><i aria-hidden="true">AU</i>{text.trustSupport}</span>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="content-wrap">
-          <div className="section-heading">
-            <div>
-              <span className="eyebrow">C-BEEMS</span>
-              <h2>{text.resourcesTitle}</h2>
-              <p>{text.resourcesIntro}</p>
-            </div>
-            <Link className="button button-secondary" to={routeFor(locale, '/resources')}>
-              {text.exploreMore}
-            </Link>
-          </div>
-          <ResourceGrid locale={locale} />
+          <HomeIntroductionVideo key={locale} locale={locale} />
         </div>
       </section>
 
@@ -176,7 +147,6 @@ export function LessonPage({ locale }: LocaleProps) {
           </aside>
         </div>
       </div>
-      {(lessonIndex === 6 || lessonIndex === 7) && <SupportBand locale={locale} />}
     </section>
   )
 }
@@ -203,34 +173,44 @@ export function ContactPage({ locale }: LocaleProps) {
   useDocumentTitle(text.contactTitle, locale)
 
   return (
-    <>
-      <section className="section page-section">
-        <div className="content-wrap narrow-content">
-          <div className="page-heading">
-            <span className="eyebrow">C-BEEMS</span>
-            <h1>{text.contactTitle}</h1>
-            <p>{text.contactText}</p>
-          </div>
-          <DisabledContactForm locale={locale} />
+    <section className="section page-section">
+      <div className="content-wrap narrow-content">
+        <div className="page-heading">
+          <span className="eyebrow">C-BEEMS</span>
+          <h1>{text.contactTitle}</h1>
+          <p>{text.contactText}</p>
         </div>
-      </section>
-      <SupportBand locale={locale} />
-    </>
+        <div className="contact-details" aria-label={text.contactDetailsLabel}>
+          <a href="tel:1234567890">123-456-7890</a>
+          <a href="mailto:info@mysite.com">info@mysite.com</a>
+        </div>
+        <DisabledContactForm locale={locale} />
+      </div>
+    </section>
   )
 }
 
 export function PrivacyPage({ locale }: LocaleProps) {
   const text = copy[locale]
-  return <PolicyPage locale={locale} title={text.privacyTitle} text={text.privacyText} />
+  return <PolicyPage locale={locale} title={text.privacyTitle} document={privacyPolicy} />
 }
 
 export function AccessibilityPage({ locale }: LocaleProps) {
   const text = copy[locale]
-  return <PolicyPage locale={locale} title={text.accessibilityTitle} text={text.accessibilityText} />
+  return (
+    <PolicyPage
+      locale={locale}
+      title={text.accessibilityTitle}
+      document={accessibilityStatement}
+    />
+  )
 }
 
-function PolicyPage({ locale, title, text }: LocaleProps & { title: string; text: string }) {
-  const labels = copy[locale]
+function PolicyPage({
+  locale,
+  title,
+  document,
+}: LocaleProps & { title: string; document: PolicyDocument }) {
   useDocumentTitle(title, locale)
   return (
     <section className="section page-section">
@@ -239,7 +219,25 @@ function PolicyPage({ locale, title, text }: LocaleProps & { title: string; text
           <span className="eyebrow">C-BEEMS</span>
           <h1>{title}</h1>
         </div>
-        <ReservedCard label={labels.reservedLabel} text={text} />
+        <article className="policy-content">
+          {document.introduction.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          {document.sections.map((policySection) => (
+            <section className="policy-section" key={policySection.heading}>
+              <h2>{policySection.heading}</h2>
+              {policySection.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              {policySection.items && (
+                <ul>
+                  {policySection.items.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              )}
+              {policySection.links?.map((link) => (
+                <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
+                  {link.label}
+                </a>
+              ))}
+            </section>
+          ))}
+        </article>
       </div>
     </section>
   )

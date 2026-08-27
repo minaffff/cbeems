@@ -1,9 +1,8 @@
-# C-BEEMS V1 technical prototype
+# C-BEEMS
 
-Local React Router prototype for the C-BEEMS Wix-to-React/Firebase migration.
-This stage validates bilingual routing, page structure, responsive behaviour,
-Firestore lesson reads and Storage video playback against the local Firebase
-Emulator Suite. It does not connect to or deploy a real Firebase environment.
+Bilingual English and Hindi parenting-support website built with React Router
+and Firebase. Firebase Hosting serves the application, Cloud Firestore stores
+published lesson and media metadata, and Firebase Storage serves the videos.
 
 ## Run locally
 
@@ -20,11 +19,11 @@ npm test
 npm run build
 ```
 
-## Firebase Emulator prototype
+## Firebase Emulator Suite
 
-The browser is configured to connect only to local Firestore (`8080`), Storage
-(`9199`) and Functions (`5001`) emulators. The Hosting emulator serves Vite's
-`dist` directory on `5002` (`5000` is commonly reserved by macOS AirPlay).
+The local environment connects to Firestore (`8080`), Storage (`9199`) and
+Functions (`5001`) emulators. The Hosting emulator serves Vite's `dist`
+directory on `5002` (`5000` is commonly reserved by macOS AirPlay).
 
 In terminal 1:
 
@@ -76,7 +75,40 @@ Every page route is loaded through `React.lazy` with an accessible bilingual
 loading state. The Firebase lesson repository is also imported on demand, so
 the initial JavaScript bundle does not contain the Firebase SDK.
 
-## Prototype routes
+## Production Firebase data
+
+The production project contains eight published lessons, sixteen lesson videos
+(English and Hindi for each lesson), and two locale-specific Introduction
+videos. Media metadata is stored in `mediaAssets`; lesson metadata is stored in
+`lessons`.
+
+After uploading the expected files to Storage, verify and create Introduction
+media metadata with a dry run followed by an explicit atomic apply:
+
+```bash
+npm run seed:production-intro -- --project c-beems-prototype-dev
+npm run seed:production-intro -- --project c-beems-prototype-dev --apply
+```
+
+The script is locked to `c-beems-prototype-dev`, verifies both Storage objects
+and their video content types, and refuses partial or destructive updates.
+
+## Preview and deployment
+
+Build and preview the exact production output locally:
+
+```bash
+npm run build
+npm run preview
+```
+
+When final checks are complete, deploy Hosting and the reviewed security rules:
+
+```bash
+firebase deploy --only hosting,firestore:rules,storage
+```
+
+## Routes
 
 - `/:locale/`
 - `/:locale/resources`
@@ -86,6 +118,5 @@ the initial JavaScript bundle does not contain the Firebase SDK.
 - `/:locale/privacy`
 - `/:locale/accessibility`
 
-Supported locale values are `en` and `hi`. Production media, analytics and
-contact submission remain deliberately disconnected in this stage. Do not run
-`firebase deploy` for this prototype.
+Supported locale values are `en` and `hi`. Contact-form submission is currently
+disabled; visitors should use the published phone number or email address.

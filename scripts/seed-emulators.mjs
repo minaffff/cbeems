@@ -73,7 +73,7 @@ await firestore.collection('lessons').doc('lesson-01').set({
   translations: {
     en: {
       title: 'Enculturation & Acculturation',
-      summary: 'Emulator-backed bilingual lesson metadata for the technical prototype.',
+      summary: 'Emulator-backed bilingual lesson metadata for local development.',
     },
     hi: {
       title: 'संस्कृतिकरण और नई संस्कृति को अपनाना',

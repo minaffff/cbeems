@@ -14,6 +14,9 @@
     "verify:emulators": "firebase emulators:exec --only firestore,storage \"npm run test:rules && npm run seed:emulators\"",
     "generate:test-media": "node scripts/generate-test-media.mjs",
     "seed:emulators": "node scripts/seed-emulators.mjs",
+    "seed:production-media": "node scripts/seed-production-media.mjs",
+    "seed:production-intro": "node scripts/seed-production-intro.mjs",
+    "seed:production-lessons": "node scripts/seed-production-lessons.mjs",
     "emulators": "npm run build && firebase emulators:start --only firestore,storage,functions,hosting",
     "preview": "vite preview"
   },

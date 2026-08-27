@@ -31,12 +31,13 @@ export function LanguageSwitcher({ locale, className = '' }: LocaleProps & { cla
   return (
     <button
       type="button"
-      className={`button button-secondary language-switcher ${className}`.trim()}
+      className={`language-switcher ${className}`.trim()}
       onClick={switchLanguage}
       aria-label={text.switchLanguageLabel}
     >
-      <span aria-hidden="true">अ / A</span>
-      {text.switchLanguage}
+      <span className={locale === 'en' ? 'is-active' : ''}>EN</span>
+      <i aria-hidden="true">|</i>
+      <span className={locale === 'hi' ? 'is-active' : ''}>हिन्दी</span>
     </button>
   )
 }
@@ -109,32 +110,33 @@ export function Header({ locale }: LocaleProps) {
   )
 }
 
-type CookieChoice = 'all' | 'essential' | 'custom'
-
 export function FooterAndCookies({ locale }: LocaleProps) {
   const text = copy[locale]
   const [cookieOpen, setCookieOpen] = useState(() => !localStorage.getItem('cbeems-cookie-choice'))
-  const [manageOpen, setManageOpen] = useState(false)
-  const [analytics, setAnalytics] = useState(false)
 
-  const saveChoice = (choice: CookieChoice) => {
-    localStorage.setItem('cbeems-cookie-choice', choice)
+  const saveChoice = () => {
+    localStorage.setItem('cbeems-cookie-choice', 'essential')
     setCookieOpen(false)
-    setManageOpen(false)
   }
 
   return (
     <>
       <footer className="site-footer">
         <div className="content-wrap footer-grid">
-          <div className="footer-brand">
-            <strong>C-BEEMS</strong>
-            <span>{text.brandSub}</span>
-            <small>{text.prototype}</small>
+          <div className="footer-contact">
+            <a href="tel:1234567890">123-456-7890</a>
+            <a href="mailto:info@mysite.com">info@mysite.com</a>
+            <address>
+              500 Terry Francine Street,<br />
+              6th Floor, San Francisco,<br />
+              CA 94158
+            </address>
           </div>
-          <div>
-            <strong>{text.navContact}</strong>
-            <span>{text.footerStatus}</span>
+          <div className="footer-socials" aria-label={text.socialLinksLabel}>
+            <a href="https://www.facebook.com/wix" target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
+            <a href="https://www.instagram.com/wix" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
+            <a href="https://x.com/wix" target="_blank" rel="noreferrer" aria-label="X">X</a>
+            <a href="https://www.tiktok.com/@wix" target="_blank" rel="noreferrer" aria-label="TikTok">♪</a>
           </div>
           <div className="footer-links">
             <Link to={routeFor(locale, '/privacy')}>{text.privacyTitle}</Link>
@@ -142,18 +144,17 @@ export function FooterAndCookies({ locale }: LocaleProps) {
             <button
               type="button"
               className="text-button"
-              onClick={() => {
-                setCookieOpen(true)
-                setManageOpen(true)
-              }}
+              onClick={() => setCookieOpen(true)}
             >
               {text.cookiePreferences}
             </button>
           </div>
         </div>
         <div className="content-wrap footer-bottom">
-          <span>© C-BEEMS</span>
-          <span>{text.prototype}</span>
+          <span>
+            © 2035 by BEEMS. Powered and secured by{' '}
+            <a href="https://www.wix.com/" target="_blank" rel="noreferrer">Wix</a>
+          </span>
         </div>
       </footer>
 
@@ -163,39 +164,12 @@ export function FooterAndCookies({ locale }: LocaleProps) {
             <strong>{text.cookieTitle}</strong>
             <p>{text.cookieText}</p>
           </div>
-          <div className="cookie-actions">
-            <button type="button" className="button button-primary" onClick={() => saveChoice('all')}>
-              {text.acceptAll}
-            </button>
-            <button type="button" className="button button-secondary" onClick={() => saveChoice('essential')}>
-              {text.rejectOptional}
-            </button>
-            <button
-              type="button"
-              className="button button-quiet"
-              aria-expanded={manageOpen}
-              aria-controls="cookie-options"
-              onClick={() => setManageOpen((open) => !open)}
-            >
-              {text.manage}
+          <div className="cookie-options">
+            <label><input type="checkbox" checked disabled /> {text.essential}</label>
+            <button type="button" className="button button-primary" onClick={saveChoice}>
+              {text.saveChoices}
             </button>
           </div>
-          {manageOpen && (
-            <div id="cookie-options" className="cookie-options">
-              <label><input type="checkbox" checked disabled /> {text.essential}</label>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={analytics}
-                  onChange={(event) => setAnalytics(event.target.checked)}
-                />{' '}
-                {text.analytics}
-              </label>
-              <button type="button" className="button button-secondary" onClick={() => saveChoice('custom')}>
-                {text.saveChoices}
-              </button>
-            </div>
-          )}
         </section>
       )}
     </>
@@ -239,7 +213,6 @@ export function ResourceGrid({ locale, limit }: LocaleProps & { limit?: number }
             <strong>{lesson.title[locale]}</strong>
             <span className="resource-meta">
               {text.videoLesson}
-              {lesson.dataSource === 'firestore' && <i className="firebase-source">Emulator</i>}
             </span>
             <span className="card-arrow" aria-hidden="true">→</span>
           </Link>
@@ -276,7 +249,7 @@ export function LessonMedia({
 }: LocaleProps & { label: string; media?: MediaReference }) {
   const text = copy[locale]
   const playable =
-    env.firebase.useEmulators && media?.placeholder === false && Boolean(media.assetId)
+    env.firebase.enabled && media?.placeholder === false && Boolean(media.assetId)
   const [attempt, setAttempt] = useState(0)
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'placeholder'>(
     playable ? 'loading' : 'placeholder',
@@ -287,7 +260,7 @@ export function LessonMedia({
     if (!playable || !media?.assetId) return
     let active = true
 
-    void import('./features/lessons/api/lessonRepository')
+    void import('./services/firebase/mediaRepository')
       .then(({ loadMediaUrl }) => loadMediaUrl(media.assetId!))
       .then((url) => {
         if (!active) return
