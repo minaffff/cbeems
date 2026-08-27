@@ -1,0 +1,74 @@
+[
+  {
+    "id": "lesson-01",
+    "slug": "enculturation-and-acculturation",
+    "category": "culture",
+    "title": {
+      "en": "Enculturation & Acculturation",
+      "hi": "संस्कृतिकरण और नई संस्कृति को अपनाना"
+    }
+  },
+  {
+    "id": "lesson-02",
+    "slug": "four-ways-of-acculturation",
+    "category": "culture",
+    "title": {
+      "en": "Four Ways of Acculturation",
+      "hi": "नई संस्कृति अपनाने के चार तरीके"
+    }
+  },
+  {
+    "id": "lesson-03",
+    "slug": "children-adapt-faster",
+    "category": "culture",
+    "title": {
+      "en": "Children Adapt Faster",
+      "hi": "बच्चे अधिक तेज़ी से अनुकूल होते हैं"
+    }
+  },
+  {
+    "id": "lesson-04",
+    "slug": "lived-experiences",
+    "category": "culture",
+    "title": {
+      "en": "Lived Experiences",
+      "hi": "जीवन के अनुभव"
+    }
+  },
+  {
+    "id": "lesson-05",
+    "slug": "protective-parental-factors",
+    "category": "parenting",
+    "title": {
+      "en": "Protective Parental Factors",
+      "hi": "माता-पिता के सुरक्षात्मक कारक"
+    }
+  },
+  {
+    "id": "lesson-06",
+    "slug": "less-helpful-parenting-approaches",
+    "category": "parenting",
+    "title": {
+      "en": "Less Helpful Parenting Approaches",
+      "hi": "कम सहायक पालन-पोषण के तरीके"
+    }
+  },
+  {
+    "id": "lesson-07",
+    "slug": "mental-health-wellbeing-spectrum",
+    "category": "wellbeing",
+    "title": {
+      "en": "Mental Health Well-Being Spectrum",
+      "hi": "मानसिक स्वास्थ्य और कल्याण का दायरा"
+    }
+  },
+  {
+    "id": "lesson-08",
+    "slug": "immigrant-specific-mental-health-risk-factors",
+    "category": "wellbeing",
+    "title": {
+      "en": "Immigrant Specific Mental Health Risk Factors",
+      "hi": "प्रवासी परिवारों के मानसिक स्वास्थ्य जोखिम"
+    }
+  }
+]

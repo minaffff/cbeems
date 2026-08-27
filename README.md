@@ -16,6 +16,7 @@ npm run dev
 ```bash
 npm run lint
 npm test
+npm run test:rules:emulators
 npm run build
 ```
 
@@ -53,15 +54,24 @@ The formal-development structure now separates responsibilities:
 ```text
 src/
   app/                  application shell and lazy route configuration
-  components/           shared layout and feedback boundaries
+  components/           shared content, layout and feedback components
   config/               validated environment configuration
+  content/              bilingual copy, policies and lesson manifest
   features/
     contact/            contact feature boundary
+    introduction/       locale-specific Introduction video
     lessons/            lesson repository, state and UI boundary
+    policies/           policy document rendering
   pages/routes/         route-level lazy-loading entry points
+  routing/              localized route helpers
   services/firebase/    Firebase client and emulator connection
+  styles/               application-wide and shared button styles
   types/                shared domain types
 ```
+
+`src/content/lesson-manifest.json` is the single source for the fallback lesson
+order, slugs, categories and bilingual titles. The production lesson and media
+seed scripts validate and read the same manifest.
 
 `.env.local` is the local Emulator configuration and `.env.test` explicitly
 disables Firebase network access during component tests. For a remote
@@ -82,16 +92,41 @@ The production project contains eight published lessons, sixteen lesson videos
 videos. Media metadata is stored in `mediaAssets`; lesson metadata is stored in
 `lessons`.
 
-After uploading the expected files to Storage, verify and create Introduction
-media metadata with a dry run followed by an explicit atomic apply:
+All production seed scripts are locked to `c-beems-prototype-dev`, run as a dry
+run by default and require `--apply` before writing. They use atomic creates and
+refuse to overwrite existing Firestore documents.
+
+After uploading all English and Hindi lesson videos, verify and create the 16
+lesson media records:
+
+```bash
+npm run seed:production-media -- --project c-beems-prototype-dev
+npm run seed:production-media -- --project c-beems-prototype-dev --apply
+```
+
+Then verify those media records and create the eight published lessons:
+
+```bash
+npm run seed:production-lessons -- --project c-beems-prototype-dev
+npm run seed:production-lessons -- --project c-beems-prototype-dev --apply
+```
+
+After uploading the two Introduction videos, verify and create their media
+records:
 
 ```bash
 npm run seed:production-intro -- --project c-beems-prototype-dev
 npm run seed:production-intro -- --project c-beems-prototype-dev --apply
 ```
 
-The script is locked to `c-beems-prototype-dev`, verifies both Storage objects
-and their video content types, and refuses partial or destructive updates.
+Each media script verifies the expected Storage paths and video content types
+before it can write to Firestore.
+
+## Firebase Functions
+
+The Functions workspace is intentionally retained for a future contact-form
+backend. It currently exports no functions and is not part of the production
+deployment command below.
 
 ## Preview and deployment
 

@@ -7,6 +7,7 @@ import {
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { RouteLoading } from '../components/feedback/RouteLoading'
 import { isLocale } from '../content'
+import { routeFor } from '../routing/routes'
 import type { LocaleProps } from '../types/domain'
 import { AppShell } from './AppShell'
 
@@ -22,9 +23,9 @@ const NotFoundPage = lazy(() => import('../pages/routes/NotFoundRoute'))
 type LazyPage = LazyExoticComponent<ComponentType<LocaleProps>>
 
 function RootRedirect() {
-  const storedLocale = localStorage.getItem('cbeems-locale')
-  const locale = isLocale(storedLocale ?? undefined) ? storedLocale : 'en'
-  return <Navigate to={`/${locale}/`} replace />
+  const storedLocale = localStorage.getItem('cbeems-locale') ?? undefined
+  const locale = isLocale(storedLocale) ? storedLocale : 'en'
+  return <Navigate to={routeFor(locale)} replace />
 }
 
 function LocaleRoute() {

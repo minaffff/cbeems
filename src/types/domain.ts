@@ -17,9 +17,8 @@ export type Lesson = {
   title: Record<Locale, string>
 }
 
-export type PrototypeLesson = Lesson & {
+export type ResolvedLesson = Lesson & {
   order: number
   summary?: Partial<Record<Locale, string>>
   videos?: Partial<Record<Locale, MediaReference>>
-  dataSource: 'static' | 'firestore'
 }

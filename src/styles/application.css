@@ -1,0 +1,73 @@
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  overflow: clip;
+}
+
+main {
+  flex: 1;
+}
+
+.route-loading {
+  display: grid;
+  min-height: 42vh;
+  place-items: center;
+  align-content: center;
+  gap: 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.route-loading-mark {
+  width: 34px;
+  height: 34px;
+  border: 3px solid var(--teal-tint);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: route-loading-spin 700ms linear infinite;
+}
+
+@keyframes route-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-loading-mark {
+    animation: none;
+  }
+}
+
+.content-wrap {
+  width: min(1180px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.narrow-content {
+  width: min(820px, calc(100% - 48px));
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  top: 8px;
+  left: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: white;
+  background: var(--ink);
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (max-width: 767px) {
+  .content-wrap,
+  .narrow-content {
+    width: min(100% - 32px, 1180px);
+  }
+}

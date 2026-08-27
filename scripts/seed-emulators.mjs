@@ -87,12 +87,4 @@ await firestore.collection('lessons').doc('lesson-01').set({
   updatedAt: FieldValue.serverTimestamp(),
 })
 
-await firestore.collection('siteSettings').doc('global').set({
-  brandName: 'C-BEEMS',
-  defaultLocale: 'en',
-  supportedLocales: ['en', 'hi'],
-  prototype: true,
-  updatedAt: FieldValue.serverTimestamp(),
-})
-
-console.log('Seeded 1 published lesson, 2 media records, 2 videos and site settings.')
+console.log('Seeded 1 published lesson, 2 media records and 2 videos.')

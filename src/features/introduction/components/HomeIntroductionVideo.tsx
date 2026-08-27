@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { env } from '../../../config/env'
-import { copy, type Locale } from '../../../content'
+import { copy } from '../../../content'
+import type { Locale } from '../../../types/domain'
 
 const assetIds: Record<Locale, string> = {
   en: 'introduction-en',

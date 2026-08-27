@@ -16,21 +16,6 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    match /pages/{pageId} {
-      allow read: if resource.data.status in ['published', 'reserved'];
-      allow write: if false;
-    }
-
-    match /siteSettings/global {
-      allow read: if true;
-      allow write: if false;
-    }
-
-    match /supportLinks/{supportLinkId} {
-      allow read: if isPublished();
-      allow write: if false;
-    }
-
     match /contactSubmissions/{submissionId} {
       allow read, write: if false;
     }

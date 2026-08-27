@@ -1,8 +1,14 @@
+/**
+ * Production lesson seed for c-beems-prototype-dev.
+ * Runs as a dry run unless --apply is passed and never overwrites documents.
+ */
+
 import { getAccessToken } from '../node_modules/firebase-tools/lib/apiv2.js'
 import {
   getGlobalDefaultAccount,
   setActiveAccount,
 } from '../node_modules/firebase-tools/lib/auth.js'
+import { lessonManifest } from './lib/lesson-manifest.mjs'
 
 const expectedProjectId = 'c-beems-prototype-dev'
 const projectArgument = process.argv.indexOf('--project')
@@ -19,72 +25,7 @@ if (projectId !== expectedProjectId) {
   )
 }
 
-const lessons = [
-  {
-    id: 'lesson-01',
-    slug: 'enculturation-and-acculturation',
-    title: {
-      en: 'Enculturation & Acculturation',
-      hi: 'संस्कृतिकरण और नई संस्कृति को अपनाना',
-    },
-  },
-  {
-    id: 'lesson-02',
-    slug: 'four-ways-of-acculturation',
-    title: {
-      en: 'Four Ways of Acculturation',
-      hi: 'नई संस्कृति अपनाने के चार तरीके',
-    },
-  },
-  {
-    id: 'lesson-03',
-    slug: 'children-adapt-faster',
-    title: {
-      en: 'Children Adapt Faster',
-      hi: 'बच्चे अधिक तेज़ी से अनुकूल होते हैं',
-    },
-  },
-  {
-    id: 'lesson-04',
-    slug: 'lived-experiences',
-    title: {
-      en: 'Lived Experiences',
-      hi: 'जीवन के अनुभव',
-    },
-  },
-  {
-    id: 'lesson-05',
-    slug: 'protective-parental-factors',
-    title: {
-      en: 'Protective Parental Factors',
-      hi: 'माता-पिता के सुरक्षात्मक कारक',
-    },
-  },
-  {
-    id: 'lesson-06',
-    slug: 'less-helpful-parenting-approaches',
-    title: {
-      en: 'Less Helpful Parenting Approaches',
-      hi: 'कम सहायक पालन-पोषण के तरीके',
-    },
-  },
-  {
-    id: 'lesson-07',
-    slug: 'mental-health-wellbeing-spectrum',
-    title: {
-      en: 'Mental Health Well-Being Spectrum',
-      hi: 'मानसिक स्वास्थ्य और कल्याण का दायरा',
-    },
-  },
-  {
-    id: 'lesson-08',
-    slug: 'immigrant-specific-mental-health-risk-factors',
-    title: {
-      en: 'Immigrant Specific Mental Health Risk Factors',
-      hi: 'प्रवासी परिवारों के मानसिक स्वास्थ्य जोखिम',
-    },
-  },
-].map((lesson, index) => ({ ...lesson, order: index + 1 }))
+const lessons = lessonManifest
 
 const databaseRoot = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`
 const firebaseAccount = getGlobalDefaultAccount()

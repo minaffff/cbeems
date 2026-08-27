@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import { FooterAndCookies, Header } from '../components/layout'
+import { FooterAndCookies } from '../components/layout/FooterAndCookies'
+import { Header } from '../components/layout/Header'
 import { copy } from '../content'
 import type { LocaleProps } from '../types/domain'
 

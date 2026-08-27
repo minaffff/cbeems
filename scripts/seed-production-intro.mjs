@@ -1,3 +1,8 @@
+/**
+ * Production introduction-media seed for c-beems-prototype-dev.
+ * Runs as a dry run unless --apply is passed and never overwrites documents.
+ */
+
 import { getAccessToken } from '../node_modules/firebase-tools/lib/apiv2.js'
 import {
   getGlobalDefaultAccount,

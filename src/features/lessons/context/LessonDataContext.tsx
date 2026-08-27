@@ -9,22 +9,21 @@ import {
 } from 'react'
 import { env } from '../../../config/env'
 import { lessons as staticLessons } from '../../../content'
-import type { Lesson, PrototypeLesson } from '../../../types/domain'
+import type { Lesson, ResolvedLesson } from '../../../types/domain'
 import type { RemoteLesson } from '../api/lessonRepository'
 
 type DataStatus = 'static' | 'loading' | 'connected' | 'error'
 
 type LessonDataValue = {
-  lessons: PrototypeLesson[]
+  lessons: ResolvedLesson[]
   remoteLessonCount: number
   status: DataStatus
   retry: () => void
 }
 
-const initialLessons: PrototypeLesson[] = staticLessons.map((lesson, index) => ({
+const initialLessons: ResolvedLesson[] = staticLessons.map((lesson, index) => ({
   ...lesson,
   order: index + 1,
-  dataSource: 'static',
 }))
 
 const LessonDataContext = createContext<LessonDataValue>({
@@ -37,12 +36,12 @@ const LessonDataContext = createContext<LessonDataValue>({
 const mergeLessons = (
   localLessons: Lesson[],
   remoteLessons: RemoteLesson[],
-): PrototypeLesson[] => {
+): ResolvedLesson[] => {
   const remoteBySlug = new Map(remoteLessons.map((lesson) => [lesson.slug, lesson]))
 
   return localLessons.map((lesson, index) => {
     const remote = remoteBySlug.get(lesson.slug)
-    if (!remote) return { ...lesson, order: index + 1, dataSource: 'static' }
+    if (!remote) return { ...lesson, order: index + 1 }
 
     return {
       ...lesson,
@@ -56,7 +55,6 @@ const mergeLessons = (
         hi: remote.translations.hi.summary,
       },
       videos: remote.videos,
-      dataSource: 'firestore',
     }
   })
 }

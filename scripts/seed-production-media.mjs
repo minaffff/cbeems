@@ -1,8 +1,14 @@
+/**
+ * Production lesson-media seed for c-beems-prototype-dev.
+ * Runs as a dry run unless --apply is passed and never overwrites documents.
+ */
+
 import { getAccessToken } from '../node_modules/firebase-tools/lib/apiv2.js'
 import {
   getGlobalDefaultAccount,
   setActiveAccount,
 } from '../node_modules/firebase-tools/lib/auth.js'
+import { lessonManifest } from './lib/lesson-manifest.mjs'
 
 const expectedProjectId = 'c-beems-prototype-dev'
 const projectArgument = process.argv.indexOf('--project')
@@ -19,18 +25,7 @@ if (projectId !== expectedProjectId) {
   )
 }
 
-const lessonSlugs = [
-  'enculturation-and-acculturation',
-  'four-ways-of-acculturation',
-  'children-adapt-faster',
-  'lived-experiences',
-  'protective-parental-factors',
-  'less-helpful-parenting-approaches',
-  'mental-health-wellbeing-spectrum',
-  'immigrant-specific-mental-health-risk-factors',
-]
-
-const media = lessonSlugs.flatMap((slug) =>
+const media = lessonManifest.flatMap(({ slug }) =>
   ['en', 'hi'].map((language) => ({
     id: `${slug}-${language}`,
     language,

@@ -57,9 +57,6 @@ beforeEach(async () => {
         status: 'published',
         storagePath: 'public/media/video-en.mp4',
       }),
-      setDoc(doc(firestore, 'siteSettings/global'), {
-        defaultLocale: 'en',
-      }),
       uploadString(ref(storage, 'public/media/video-en.mp4'), 'public fixture'),
       uploadString(ref(storage, 'private/source.mp4'), 'private fixture'),
     ])
@@ -96,13 +93,6 @@ describe('Firestore rules', () => {
     await assertFails(setDoc(doc(firestore, 'lessons/new'), { status: 'published' }))
     await assertFails(setDoc(doc(firestore, 'contactSubmissions/new'), { message: 'test' }))
     await assertFails(getDoc(doc(firestore, 'contactSubmissions/new')))
-  })
-
-  it('allows only the explicitly public site settings document', async () => {
-    const firestore = testEnvironment.unauthenticatedContext().firestore()
-
-    await assertSucceeds(getDoc(doc(firestore, 'siteSettings/global')))
-    await assertFails(getDoc(doc(firestore, 'siteSettings/internal')))
   })
 })
 
