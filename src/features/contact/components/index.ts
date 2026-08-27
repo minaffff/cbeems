@@ -1,0 +1,1 @@
+export { DisabledContactForm } from '../../../components'
